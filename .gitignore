@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.installed.cfg
+*.egg
+
+# Virtual env
+.venv/
+venv/
+env/
+
+# Tests / type checkers / linters
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.kiro/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project
+data/raw/*.csv
+data/raw/*.parquet
+data/processed/*.parquet
+artifacts/
+mlruns/
+mlartifacts/
+mlruns.db
+logs/
+*.log
+
+# Keep small sample dataset committed for out-of-the-box discovery
+!data/sample/*.parquet
+
+# Keep .gitkeep
+!.gitkeep

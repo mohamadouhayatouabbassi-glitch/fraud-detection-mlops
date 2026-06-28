@@ -1,0 +1,50 @@
+name: Retrain Model
+
+# Manual retraining workflow. In production this is replaced by Airflow / Kubeflow.
+# Run with: gh workflow run train.yml
+on:
+  workflow_dispatch:
+    inputs:
+      n_rows:
+        description: "Number of synthetic rows to generate"
+        required: false
+        default: "200000"
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -e ".[dev]"
+
+      - name: Generate data
+        run: |
+          python -m fraud_detection.cli generate-data \
+            --n-rows ${{ github.event.inputs.n_rows }} \
+            --fraud-rate 0.012
+
+      - name: Train
+        run: python -m fraud_detection.cli train
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-artifacts-${{ github.sha }}
+          path: |
+            artifacts/model.joblib
+            artifacts/feature_schema.json
+            artifacts/training_stats.json
+            mlruns/
+
+      - name: Upload MLflow runs
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlruns-${{ github.sha }}
+          path: mlruns/

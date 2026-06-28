@@ -1,0 +1,64 @@
+# Business rules — owned by the Risk team, reviewed quarterly.
+# severity:
+#   HARD_BLOCK : decline regardless of ML score
+#   SUSPECT    : push the ML score up, may route to REVIEW
+#   INFO       : audit only, no impact on the decision
+
+rules:
+  - code: R001_HIGH_AMOUNT_CNP
+    severity: SUSPECT
+    description: "Card-Not-Present transaction above 1000 EUR equivalent"
+    when:
+      is_cnp: true
+      amount_gte: 1000
+
+  - code: R002_VERY_HIGH_AMOUNT
+    severity: HARD_BLOCK
+    description: "Single transaction above 5000 EUR — must be reviewed manually"
+    when:
+      amount_gte: 5000
+
+  - code: R003_GEO_MISMATCH_ECOM
+    severity: SUSPECT
+    description: "Card country != merchant country on ECOM channel"
+    when:
+      channel_in: ["ECOM"]
+      geo_mismatch: true
+
+  - code: R004_VELOCITY_BURST
+    severity: HARD_BLOCK
+    description: "More than 8 transactions in the last hour"
+    when:
+      n_tx_last_1h_gte: 8
+
+  - code: R005_HIGH_RISK_MCC
+    severity: SUSPECT
+    description: "Transaction on high-risk MCC (gambling, adult)"
+    when:
+      mcc_in: ["7995", "5967"]
+
+  - code: R006_NIGHT_ATM
+    severity: SUSPECT
+    description: "ATM withdrawal between midnight and 5 AM"
+    when:
+      channel_in: ["ATM"]
+      hour_between: [0, 5]
+
+  - code: R007_NEW_CARD_LARGE_AMOUNT
+    severity: SUSPECT
+    description: "Card less than 7 days old with amount above 300 EUR"
+    when:
+      card_age_days_lt: 7
+      amount_gte: 300
+
+  - code: R008_MULTI_COUNTRY_24H
+    severity: HARD_BLOCK
+    description: "Card used in 3+ distinct countries within 24h"
+    when:
+      distinct_countries_last_24h_gte: 3
+
+  - code: R009_ZSCORE_OUTLIER
+    severity: SUSPECT
+    description: "Amount z-score vs 30d average exceeds 6"
+    when:
+      amount_zscore_30d_gte: 6.0

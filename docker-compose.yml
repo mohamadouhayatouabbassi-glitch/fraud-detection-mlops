@@ -1,0 +1,29 @@
+services:
+  api:
+    build: .
+    image: fraud-detection-api:latest
+    container_name: fraud-api
+    ports:
+      - "8000:8000"
+    environment:
+      FRAUD_ENVIRONMENT: prod
+      FRAUD_LOG_LEVEL: INFO
+    volumes:
+      # Mount the locally trained artifact into the container
+      - ./artifacts:/app/artifacts:ro
+      - ./configs:/app/configs:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/healthz"]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+  # Optional: Prometheus to scrape /metrics. Uncomment to enable.
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml:ro

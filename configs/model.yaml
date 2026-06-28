@@ -1,0 +1,32 @@
+# Hyperparameters owned by the DS team. Versioned with the code.
+# Any tuning here should be A/B tested on the shadow traffic before going live.
+
+lightgbm:
+  objective: binary
+  metric: auc
+  learning_rate: 0.05
+  num_leaves: 64
+  max_depth: -1
+  min_data_in_leaf: 50
+  feature_fraction: 0.85
+  bagging_fraction: 0.85
+  bagging_freq: 5
+  lambda_l1: 0.0
+  lambda_l2: 1.0
+  is_unbalance: true
+  verbose: -1
+
+training:
+  num_boost_round: 600
+  early_stopping_rounds: 40
+  val_fraction: 0.15           # taken from the END of the training set (time-based)
+  random_state: 42
+  calibration_method: isotonic # sklearn.calibration.CalibratedClassifierCV
+
+decision:
+  threshold_review: 0.30
+  threshold_decline: 0.70
+  # Optional uplift from rules: each SUSPECT hit adds this to the probability
+  # before thresholding (capped at 1.0).
+  suspect_uplift_per_hit: 0.05
+  max_suspect_uplift: 0.20
