@@ -418,6 +418,7 @@ Model hyperparameters: [`configs/model.yaml`](configs/model.yaml).
 
 ## 11. Documentation
 
+* [`docs/Documentation_Fraud_Detection_MLOps.pdf`](docs/Documentation_Fraud_Detection_MLOps.pdf) — **documentation PDF complète en français** (19 pages : contexte, architecture, stack, étapes, pipelines, modèle, règles, API, observabilité, déploiement, résultats). Régénérable via `pip install ".[docs]" && python scripts/generate_pdf_doc.py`.
 * [`docs/architecture.md`](docs/architecture.md) — components & data flow, training-serving parity invariant, scaling considerations
 * [`docs/model_card.md`](docs/model_card.md) — Google-style model card (intended use, training data, evaluation, fairness, limitations)
 * [`docs/runbook.md`](docs/runbook.md) — on-call alerts (A1–A4) and rollback procedures

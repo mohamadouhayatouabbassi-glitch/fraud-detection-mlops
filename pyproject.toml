@@ -37,6 +37,9 @@ dev = [
     "pre-commit>=3.7",
     "types-PyYAML",
 ]
+docs = [
+    "reportlab>=4.2",
+]
 
 [project.scripts]
 fraud = "fraud_detection.cli:app"
